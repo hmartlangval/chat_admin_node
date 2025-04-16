@@ -45,6 +45,10 @@ app.use('/api/items', require('./routes/api/items/id'));
 // Routes - Pages
 app.use('/', require('./routes/pages/index'));
 app.use('/health', require('./routes/pages/health'));
+app.use('/admin', require('./routes/pages/admin'));
+app.use('/admin/services', require('./routes/pages/admin/services'));
+app.use('/admin/users', require('./routes/pages/admin/users'));
+app.use('/admin/settings', require('./routes/pages/admin/settings'));
 
 // Socket.IO event handlers
 io.on('connection', (socket) => {
