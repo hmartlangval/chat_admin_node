@@ -6,6 +6,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const compression = require('compression');
 const path = require('path');
+const fs = require('fs');
 
 // Initialize Express app
 const app = express();
@@ -36,13 +37,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Initialize Socket.IO - simplified configuration
 const io = new Server(server);
 
-// Routes
-app.use('/api', require('./routes/api'));
+// Routes - API
+app.use('/api/status', require('./routes/api/status'));
+app.use('/api/items', require('./routes/api/items'));
+app.use('/api/items', require('./routes/api/items/id'));
 
-// Health check endpoint for IIS ping
-app.get('/health', (req, res) => {
-  res.status(200).send('OK');
-});
+// Routes - Pages
+app.use('/', require('./routes/pages/index'));
+app.use('/health', require('./routes/pages/health'));
 
 // Socket.IO event handlers
 io.on('connection', (socket) => {
@@ -67,7 +69,7 @@ io.engine.on("connection_error", (err) => {
   console.log(err.context);  // some additional error context
 });
 
-// Serve the frontend
+// Fallback route - serve the frontend
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
